@@ -3,8 +3,6 @@
 var handleLogin = function handleLogin(e) {
     e.preventDefault();
 
-    $('#domoMessage').animate({ width: 'hide' }, 350);
-
     if ($('#user').val() == '' || $('#pass').val() == '') {
         handleError('RAWR! Username or password is empty');
         return false;
@@ -18,8 +16,6 @@ var handleLogin = function handleLogin(e) {
 };
 var handleSignup = function handleSignup(e) {
     e.preventDefault();
-
-    $('#domoMessage').animate({ width: 'hide' }, 350);
 
     if ($('#user').val() == '' || $('#pass').val() == '' || $('#pass2').val() == '') {
         handleError('RAWR! All fields are required');
