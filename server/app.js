@@ -10,6 +10,8 @@ const session = require('express-session');
 const RedisStore = require('connect-redis')(session);
 const url = require('url');
 const csrf = require('csurf');
+const server = require('http').Server(app);
+const io = require('socket.io').listen(server);
 
 const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
@@ -71,6 +73,13 @@ app.use((err, req, res, next) => {
   return false;
 });
 
+app.use('/css',express.static(__dirname + '/css'));
+app.use('/js',express.static(__dirname + '/js'));
+app.use('/assets',express.static(__dirname + '/assets'));
+
+server.listen(port,function(){
+    console.log('Listening on '+server.address().port);
+});
 
 router(app);
 
@@ -81,3 +90,4 @@ app.listen(port, (err) => {
   console.log(`Listening on port ${port}`);
 });
 
+/*http://www.dynetisgames.com/2017/03/06/how-to-make-a-multiplayer-online-game-with-phaser-socket-io-and-node-js/*/

@@ -1,54 +1,42 @@
 {
-  "name": "Logins",
+  "name": "javascriptnetwork",
   "version": "1.0.0",
-  "engines": {
-    "node": "7.5.0",
-    "npm": "4.0.5"
-  },
-  "description": "A Simple Login Example using Node.js, Mongo and Redis",
+  "description": "",
   "main": "./server/app.js",
   "scripts": {
-    "buildLoginBundle": "babel ./client/login ./client/helper --presets react --out-file ./hosted/loginBundle.js",
+    "buildMenuBundle": "babel ./client/login ./client/helper --presets react --out-file ./hosted/loginBundle.js",
     "buildAppBundle": "babel ./client/app ./client/helper --presets react --out-file ./hosted/bundle.js",
-    "buildExploreBundle": "babel ./client/explore ./client/helper --presets react --out-file ./hosted/exploreBundle.js",
-    "build": "npm run buildLoginBundle && npm run buildAppBundle && npm run buildExploreBundle",
-    "watchLoginBundle": "babel --watch ./client/login ./client/helper --presets react --out-file ./hosted/loginBundle.js",
+    "build": "npm run buildMenuBundle && npm run buildAppBundle && npm run buildExploreBundle",
+    "watchMenuBundle": "babel --watch ./client/login ./client/helper --presets react --out-file ./hosted/loginBundle.js",
     "watchAppBundle": "babel --watch ./client/app ./client/helper --presets react --out-file ./hosted/bundle.js",
-    "watchExploreBundle": "babel --watch ./client/explore ./client/helper --presets react --out-file ./hosted/exploreBundle.js",
     "nodemon": "nodemon --watch ./server ./server/app.js",
     "start": "node ./server/app.js",
     "pretest": "eslint ./server --fix",
     "test": "echo \"Tests complete\""
   },
-  "keywords": [
-    "Node",
-    "MVC",
-    "Redis",
-    "Login"
-  ],
-  "author": "Cody Van De Mark",
-  "license": "Apache 2.0",
+  "author": "MicroRTS",
+  "license": "ISC",
   "dependencies": {
-    "body-parser": "^1.15.0",
-    "compression": "^1.6.1",
-    "connect-redis": "^3.0.2",
-    "cookie-parser": "^1.3.3",
-    "csurf": "^1.8.3",
-    "express": "^4.13.4",
+    "body-parser": "^1.18.3",
+    "compression": "^1.7.3",
+    "connect-redis": "^3.3.3",
+    "cookie-parser": "^1.4.3",
+    "csurf": "^1.9.0",
+    "express": "^4.16.3",
     "express-handlebars": "^3.0.0",
-    "express-session": "^1.13.0",
-    "helmet": "^1.3.0",
-    "mongoose": "^4.4.6",
-    "serve-favicon": "^2.3.0",
-    "underscore": "^1.8.3"
+    "express-session": "^1.15.6",
+    "phaser": "^3.13.0",
+    "serve-favicon": "^2.5.0",
+    "socket.io": "^2.1.1",
+    "underscore": "^1.9.1"
   },
   "devDependencies": {
-    "babel-cli": "^6.18.0",
+    "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.1.8",
     "babel-preset-react": "^6.24.1",
-    "eslint": "^3.0.0",
-    "eslint-config-airbnb": "^9.0.1",
-    "eslint-plugin-import": "^1.10.1",
-    "nodemon": "^1.11.0"
+    "eslint": "^5.6.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "nodemon": "^1.18.4"
   }
 }

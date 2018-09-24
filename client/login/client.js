@@ -1,110 +1,55 @@
-const handleLogin = (e) => {
-  e.preventDefault();
-
-  if ($('#user').val() == '' || $('#pass').val() == '') {
-    handleError('RAWR! Username or password is empty');
-    return false;
-  }
-    
-    console.log($("input[name=_csrf]").val());
-    
-    sendAjax('POST', $("#loginForm").attr("action"), $("#loginForm").serialize(), redirect);
-    
-    return false;
-};
-const handleSignup = (e) => {
-  e.preventDefault();
-
-  if ($('#user').val() == '' || $('#pass').val() == '' || $('#pass2').val() == '') {
-    handleError('RAWR! All fields are required');
-    return false;
-  }
-    
-    if($("#pass").val() !== $("#pass2").val()){
-        handleError("RAWR! Passwords do not match");
-        return false;
-    }
-    
-    sendAjax('POST', $("#signupForm").attr("action"), $("#signupForm").serialize(), redirect);
-    
-    return false;
-};
-
-
-const LoginWindow = (props) => {
-    return (
-    <form id="loginForm" name='loginForm' onSubmit={handleLogin} action="/login" method='POST' className='mainForm'
-        >
-        
-        <label htmlFor='username'>Username: </label>
-        <input id='user' type='text' name='username' placeholder='username' />
-        <label htmlFor='pass'>Password: </label>
-        <input id='pass' type='password' name='pass' placeholder='password' />
-        <input type='hidden' name='_csrf' value={props.csrf} />
-        <input className='formSubmit' type='submit' value='Sign in' />
-        
-        </form>
-    );
-};
-
-const SignupWindow = (props) => {
-    return(
-    <form id="signupForm" name='signupForm' onSubmit={handleSignup} action='/signup' method='POST' className='mainForm'>
-        
-        <label htmlFor='username'>Username: </label>
-        <input id='user' type='text' name='username' placeholder='username' />
-        <label htmlFor='pass'>Password: </label>
-        <input id='pass' type='password' name='pass' placeholder='password' />
-        <label htmlFor='pass2'>Password: </label>
-        <input id='pass2' type='password' name='pass2' placeholder='retype password' />
-        <input type='hidden' name='_csrf' value={props.csrf} />
-        <input className='formSubmit' type='submit' value='Sign Up' />
-        
-        </form>
-    );
-};
-
-const createLoginWindow = (csrf) => {
-    ReactDOM.render(
-    <LoginWindow csrf={csrf} />,
-        document.querySelector('#content')
-    );
-    
-};
-const createSignupWindow = (csrf) => {
-    ReactDOM.render(
-    <SignupWindow csrf={csrf} />,
-        document.querySelector('#content')
-    );
-    
-};
-
-const setup = (csrf) => {
-    const loginButton = document.querySelector('#loginButton');
-    const signupButton = document.querySelector('#signupButton');
-    
-    signupButton.addEventListener('click',(e) =>{
-        e.preventDefault();
-        createSignupWindow(csrf);
-        return false;
-    });
-    
-    loginButton.addEventListener('click',(e) => {
-        e.preventDefault();
-        createLoginWindow(csrf);
-        return false;
-    });
-    
-    createLoginWindow(csrf);
-};
-
-
-const getToken = () => {
-    sendAjax('GET','/getToken', null, (result) => {
-        setup(result.csrfToken);
-    });
-};
 
 $(document).ready(function() {
-    getToken();
+    const game = new Phaser.Game(16*32, 600, Phaser.AUTO, document.getElementById('game'));
+game.state.add('Game',Game);
+game.state.start('Game');
+var Game = {};
+    
+    Game.init = function(){
+    game.stage.disableVisibilityChange = true;
+};
+
+Game.preload = function() {
+    game.load.tilemap('map', 'assets/map/example_map.json', null, Phaser.Tilemap.TILED_JSON);
+    game.load.spritesheet('tileset', 'assets/map/tilesheet.png',32,32);
+    game.load.image('sprite','assets/sprites/sprite.png');
+};
+
+Game.create = function(){
+    Game.playerMap = {};
+    var testKey = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
+    testKey.onDown.add(Client.sendTest, this);
+    var map = game.add.tilemap('map');
+    map.addTilesetImage('tilesheet', 'tileset'); // tilesheet is the key of the tileset in map's JSON file
+    var layer;
+    for(var i = 0; i < map.layers.length; i++) {
+        layer = map.createLayer(i);
+    }
+    layer.inputEnabled = true; // Allows clicking on the map ; it's enough to do it on the last layer
+    layer.events.onInputUp.add(Game.getCoordinates, this);
+    Client.askNewPlayer();
+};
+
+Game.getCoordinates = function(layer,pointer){
+    Client.sendClick(pointer.worldX,pointer.worldY);
+};
+
+Game.addNewPlayer = function(id,x,y){
+    Game.playerMap[id] = game.add.sprite(x,y,'sprite');
+};
+
+Game.movePlayer = function(id,x,y){
+    var player = Game.playerMap[id];
+    var distance = Phaser.Math.distance(player.x,player.y,x,y);
+    var tween = game.add.tween(player);
+    var duration = distance*10;
+    tween.to({x:x,y:y}, duration);
+    tween.start();
+};
+
+Game.removePlayer = function(id){
+    Game.playerMap[id].destroy();
+    delete Game.playerMap[id];
+};
 });
+
