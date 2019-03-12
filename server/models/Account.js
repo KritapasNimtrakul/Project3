@@ -8,6 +8,7 @@ const iterations = 10000;
 const saltLength = 64;
 const keyLength = 64;
 
+
 const AccountSchema = new mongoose.Schema({
   username: {
     type: String,
@@ -29,6 +30,9 @@ const AccountSchema = new mongoose.Schema({
     default: Date.now,
   },
 });
+
+const as = AccountSchema.statics;
+const am = AccountModel;
 
 AccountSchema.statics.toAPI = doc => ({
   // _id is built into your mongo document and is guaranteed to be unique
@@ -58,13 +62,10 @@ AccountSchema.statics.findByUsername = (name, callback) => {
 AccountSchema.statics.generateHash = (password, callback) => {
   const salt = crypto.randomBytes(saltLength);
 
-  crypto.pbkdf2(password, salt, iterations, keyLength, 'RSA-SHA512', (err, hash) =>
-    callback(salt, hash.toString('hex'))
-  );
+  crypto.pbkdf2(password, salt, iterations, keyLength, 'RSA-SHA512', (err, hash) => callback(salt, hash.toString('hex')));
 };
 
-AccountSchema.statics.authenticate = (username, password, callback) =>
-AccountModel.findByUsername(username, (err, doc) => {
+as.authenticate = (username, password, callback) => am.findByUsername(username, (err, doc) => {
   if (err) {
     return callback(err);
   }

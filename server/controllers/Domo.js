@@ -1,6 +1,6 @@
 const models = require('../models');
 
-const Domo = models.Domo;
+const { models: Domo } = models.Domo;
 
 const makerPage = (req, res) => {
   Domo.DomoModel.findByOwner(req.session.account._id, (err, docs) => {
@@ -51,7 +51,7 @@ const getDomos = (request, response) => {
       console.log(err);
       return res.status(400).json({ error: 'An error occured' });
     }
-      console.log(docs);
+    console.log(docs);
     return res.json({ domos: docs });
   });
 };
@@ -60,10 +60,10 @@ const deleteDomos = (req, res) => {
   if (!req.body) {
     return res.status(400).json({ error: 'RAWR! IDK' });
   }
-    console.log(req.body.id);
+  console.log(req.body.id);
 
   const domoPromise = Domo.DomoModel.removeDomo(req.body.id);
-    
+
   domoPromise.then(() => res.json({ redirect: '/maker' }));
 
   domoPromise.catch((err) => {

@@ -1,6 +1,6 @@
 const models = require('../models');
 
-const Account = models.Account;
+const { models: Account } = models.Account;
 
 const loginPage = (req, res) => {
   res.render('menu', { csrfToken: req.csrfToken() });
@@ -61,10 +61,9 @@ const signup = (request, response) => {
 
     savePromise.then(() => {
       req.session.account = Account.AccountModel.toAPI(newAccount);
-      res.json({ redirect: '/maker' });
-    })
-    ;
 
+      res.json({ redirect: '/maker' });
+    });
     savePromise.catch((err) => {
       console.log(err);
 
